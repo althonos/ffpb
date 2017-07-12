@@ -1,8 +1,13 @@
 **Not smart. Not comprehensive. Not guaranteed to work.**
 
-`ffpb` is an FFmpeg progress formatter. It will attempt to display a nice
-progress bar in the output, based on the raw FFmpeg output, as well as an
+``ffpb`` is an FFmpeg progress formatter. It will attempt to display a nice
+progress bar in the output, based on the raw ``ffmpeg`` output, as well as an
 adaptative ETA timer.
+
+Showcase
+--------
+.. image:: https://github.com/althonos/ffpb/raw/master/static/showcase.v1.gif
+(*yes, my laptop can't encode shit*)
 
 Usage
 -----
