@@ -19,9 +19,6 @@ class AbsoluteTimeETA(progressbar.AbsoluteETA):
             self, progress, data, value, elapsed)
 
 
-
-
-
 class ProgressNotifier(collections.Callable):
 
     _DURATION_RX = re.compile("Duration: (\d{2}):(\d{2}):(\d{2})\.\d{2}")
@@ -124,7 +121,6 @@ if __name__ == "__main__":
         )
 
     except sh.ErrorReturnCode as err:
-        from pprint import pprint
         print(notifier.lines[-1])
         sys.exit(err.exit_code)
 
