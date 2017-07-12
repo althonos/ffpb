@@ -34,7 +34,6 @@ if sys.version_info < (3, 0):
 else:
     import queue
 
-
 import sh
 import progressbar
 
@@ -128,7 +127,13 @@ class ProgressNotifier(collections.Callable):
             self.pbar.update(current)
 
 
-if __name__ == "__main__":
+def main(argv=None):
+    argv = argv or sys.argv[1:]
+
+    if {'-h', '-help', '--help'}.intersection(argv):
+        sh.ffmpeg(help=True, _fg=True)
+        return 0
+
     notifier = ProgressNotifier()
 
     try:
@@ -149,6 +154,12 @@ if __name__ == "__main__":
 
     except sh.ErrorReturnCode as err:
         print(notifier.lines[-1])
-        sys.exit(err.exit_code)
+        return err.exit_code
 
-    print()
+    else:
+        print()
+        return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
