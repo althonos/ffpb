@@ -8,9 +8,8 @@ Usage
 -----
 `ffpb` is is not even self-aware. Any argument given to the `ffpb` command is
 transparently given to the `ffmpeg` binary on your system, without any form of
-validation.
-
-So if you know how to use the FFmpeg CLI, you know how to use `ffpb` ! 
+validation. So if you know how to use the FFmpeg CLI, you know how to use
+`ffpb` !
 
 
 Installation
