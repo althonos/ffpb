@@ -15,6 +15,9 @@ of validation. So if you know how to use the FFmpeg CLI, you know how to use
 Installation
 ------------
 
+Currently, this is not available on PyPI. But it can be installed from GitHub
+almost as easily :
+
 .. code:: bash
 
-   pip install ffpb
+   pip install https://github.com/althonos/ffpb/archive/master.zip
