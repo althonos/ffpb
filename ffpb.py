@@ -12,6 +12,16 @@ import sh
 import progressbar
 
 
+class AbsoluteTimeETA(progressbar.AbsoluteETA):
+
+    def _calculate_eta(self, progress, data, value, elapsed):
+        return elapsed + progressbar.ETA._calculate_eta(
+            self, progress, data, value, elapsed)
+
+
+
+
+
 class ProgressNotifier(collections.Callable):
 
     _DURATION_RX = re.compile("Duration: (\d{2}):(\d{2}):(\d{2})\.\d{2}")
@@ -30,11 +40,26 @@ class ProgressNotifier(collections.Callable):
         self.started = False
         self.pbar = progressbar.ProgressBar(widgets=[
             lambda w, d: self.source, ' ',
-            progressbar.AnimatedMarker("🌑🌒🌓🌔🌕🌖🌗🌘"),
-            progressbar.Bar(fill='░', left=' ╢', right='╟ ', marker='█'),
-            progressbar.Percentage('%(percentage)3d% % ', ),
-            progressbar.Timer(format='(%(elapsed)s / '),
-            progressbar.ETA(format='%(eta)s)', format_finished='%(elapsed)s'),
+            progressbar.AnimatedMarker(
+                markers="🌑🌒🌓🌔🌕🌖🌗🌘",
+            ),
+            progressbar.Bar(
+                marker='█',
+                fill='░',
+                left=' ╢',
+                right='╟ ',
+            ),
+            progressbar.Percentage(
+                '%(percentage)3d% % '
+            ),
+            progressbar.Timer(
+                format='(%(elapsed)s / '
+            ),
+            AbsoluteTimeETA(
+                format='%(eta)s)',
+                format_finished='%(elapsed)s',
+                format_not_started='--:--:--'
+            ),
         ])
 
     def newline(self):
@@ -46,7 +71,7 @@ class ProgressNotifier(collections.Callable):
         if char not in '\r\n':
             self.line_acc.append(char)
             if self.line_acc[-6:] == list('[y/N] '):
-                print(self.line, end='')
+                print(''.join(self.line_acc), end='')
                 stdin.put(str(input())+'\n')
                 self.newline()
             return
