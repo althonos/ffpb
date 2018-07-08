@@ -93,6 +93,10 @@ class ProgressNotifier(collections.Callable):
 
     def __call__(self, char, stdin):
 
+        if type(char) != unicode:
+            encoding = chardet.detect(char)['encoding']
+            char = unicode(char, encoding)
+
         if char not in '\r\n':
             self.line_acc.append(char)
             if self.line_acc[-6:] == list('[y/N] '):
