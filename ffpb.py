@@ -63,8 +63,9 @@ class ProgressNotifier(collections.Callable):
         self.duration = None
         self.source = None
         self.started = False
+        print()
         self.pbar = progressbar.ProgressBar(widgets=[
-            lambda w, d: self.source, ' ',
+            lambda w, d: os.path.basename(self.source), ' ',
             progressbar.AnimatedMarker(
                 markers="—/|\\",
             ),
