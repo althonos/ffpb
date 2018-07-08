@@ -101,7 +101,7 @@ class ProgressNotifier(collections.Callable):
             self.line_acc.append(char)
             if self.line_acc[-6:] == list('[y/N] '):
                 print(''.join(self.line_acc), end='')
-                stdin.put(str(input())+'\n')
+                stdin.put(input()+'\n')
                 self.newline()
             return
 
