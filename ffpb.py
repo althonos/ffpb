@@ -25,6 +25,8 @@ from __future__ import unicode_literals
 from __future__ import print_function
 
 import re
+import chardet
+import os
 import sys
 import collections
 
