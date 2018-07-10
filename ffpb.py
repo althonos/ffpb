@@ -25,6 +25,8 @@ from __future__ import unicode_literals
 from __future__ import print_function
 
 import re
+import chardet
+import os
 import sys
 import collections
 
@@ -61,8 +63,9 @@ class ProgressNotifier(collections.Callable):
         self.duration = None
         self.source = None
         self.started = False
+        print()
         self.pbar = progressbar.ProgressBar(widgets=[
-            lambda w, d: self.source, ' ',
+            lambda w, d: os.path.basename(self.source), ' ',
             progressbar.AnimatedMarker(
                 markers="—/|\\",
             ),
@@ -91,11 +94,15 @@ class ProgressNotifier(collections.Callable):
 
     def __call__(self, char, stdin):
 
+        if type(char) != unicode:
+            encoding = chardet.detect(char)['encoding']
+            char = unicode(char, encoding)
+
         if char not in '\r\n':
             self.line_acc.append(char)
             if self.line_acc[-6:] == list('[y/N] '):
                 print(''.join(self.line_acc), end='')
-                stdin.put(str(input())+'\n')
+                stdin.put(input()+'\n')
                 self.newline()
             return
 
