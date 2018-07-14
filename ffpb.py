@@ -163,6 +163,10 @@ def main(argv=None):
         print(notifier.lines[-1])
         return err.exit_code
 
+    except KeyboardInterrupt:
+        print('\nExiting.')
+        return 0
+
     else:
         print()
         return 0
