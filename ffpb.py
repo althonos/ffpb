@@ -25,8 +25,8 @@ from __future__ import unicode_literals
 from __future__ import print_function
 
 import re
-import chardet
 import os
+import signal
 import sys
 import collections
 
@@ -36,6 +36,7 @@ if sys.version_info < (3, 0):
 else:
     import queue
 
+import chardet
 import sh
 import progressbar
 
@@ -165,7 +166,7 @@ def main(argv=None):
 
     except KeyboardInterrupt:
         print('\nExiting.')
-        return 0
+        return signal.SIGINT + 128    # POSIX standard
 
     else:
         print()
