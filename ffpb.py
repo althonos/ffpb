@@ -95,9 +95,14 @@ class ProgressNotifier(collections.Callable):
 
     def __call__(self, char, stdin):
 
-        if type(char) != unicode:
-            encoding = chardet.detect(char)['encoding']
-            char = unicode(char, encoding)
+        if sys.version_info < (3, 0):
+            if type(char) != unicode:
+                encoding = chardet.detect(char)['encoding']
+                char = unicode(char, encoding)
+        else:
+            if type(char) != str:
+                encoding = chardet.detect(char)['encoding']
+                char = str(char, encoding)
 
         if char not in '\r\n':
             self.line_acc.append(char)
