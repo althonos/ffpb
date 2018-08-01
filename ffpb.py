@@ -35,6 +35,7 @@ if sys.version_info < (3, 0):
     input = raw_input
 else:
     import queue
+    unicode = str
 
 import chardet
 import sh
