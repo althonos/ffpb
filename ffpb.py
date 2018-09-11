@@ -45,7 +45,7 @@ import sh
 import tqdm
 
 
-class ProgressNotifier(collections.abc.Callable):
+class ProgressNotifier(object):
 
     _DURATION_RX = re.compile("Duration: (\d{2}):(\d{2}):(\d{2})\.\d{2}")
     _PROGRESS_RX = re.compile("time=(\d{2}):(\d{2}):(\d{2})\.\d{2}")
