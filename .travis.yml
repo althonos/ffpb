@@ -29,6 +29,18 @@ before_script:
 script:
 - ffpb -i test.mp4 -vcodec copy test.mkv
 
+before_deploy:
+  - pip install -U twine
+  - python setup.py sdist bdist_wheel
+
+deploy:
+  provider: script
+  script: twine upload --skip-existing dist/*
+  skip_cleanup: true
+  on:
+    tags: true
+    repo: althonos/ffpb
+
 notifications:
   email:
   - althonosdev@gmail.com
