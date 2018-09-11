@@ -31,7 +31,6 @@ import re
 import os
 import signal
 import sys
-import collections
 
 if sys.version_info < (3, 0):
     import Queue as queue
