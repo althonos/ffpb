@@ -32,6 +32,7 @@ Showcase
 --------
 
 .. image:: https://github.com/althonos/ffpb/raw/master/static/showcase.v1.gif
+
 (*yes, my laptop can't encode shit*)
 
 
