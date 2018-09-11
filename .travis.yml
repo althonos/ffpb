@@ -1,0 +1,34 @@
+sudo: false
+dist: precise
+language: python
+
+addons:
+  apt:
+    update: true
+    packages:
+    - ffmpeg
+    sources:
+    - sourceline: 'ppa:mc3man/trusty-media'
+
+python:
+- '2.7'
+- '3.4'
+- '3.5'
+- '3.6'
+
+before_install:
+- pip install -U pip wheel setuptools
+
+install:
+- pip install .
+
+before_script:
+- curl -SsL "http://techslides.com/demos/sample-videos/small.mp4" > test.mp4
+- ffmpeg -i test.mp4 -vcodec copy test2.mkv
+
+script:
+- ffpb -i test.mp4 -vcodec copy test.mkv
+
+notifications:
+  email:
+  - althonosdev@gmail.com
