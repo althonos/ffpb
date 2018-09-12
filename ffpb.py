@@ -101,8 +101,6 @@ class ProgressNotifier(object):
         return line
 
     def get_fps(self, line):
-        """
-        """
         search = self._FPS_RX.search(line)
         if search is not None:
             return round(float(search.group(1)))
@@ -122,16 +120,26 @@ class ProgressNotifier(object):
     def progress(self, line):
         search = self._PROGRESS_RX.search(line)
         if search is not None:
+
+            total = self.duration
+            current = self._seconds(*search.groups())
+            unit = " seconds"
+
+            if self.fps is not None:
+                unit = " frames"
+                current *= self.fps
+                total *= self.fps
+
             if self.pbar is None:
                 self.pbar = tqdm.tqdm(
                     desc=self.source,
                     file=self.file,
-                    total=self.duration * self.fps,
+                    total=total,
                     dynamic_ncols=True,
-                    unit=" frames",
+                    unit=unit,
                     ncols=0,
                 )
-            current = self._seconds(*search.groups()) * self.fps
+
             self.pbar.update(current - self.pbar.n)
 
 

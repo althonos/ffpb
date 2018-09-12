@@ -23,10 +23,16 @@ install:
 - pip install .
 
 before_script:
+- ffmpeg -version
+# test audio conversion
+- curl -SsL "https://www.sample-videos.com/audio/mp3/wave.mp3" > test.mp3
+- ffmpeg -v error -i test.mp3 -acodec copy -f mp3 - > /dev/null
+# test video conversion
 - curl -SsL "http://techslides.com/demos/sample-videos/small.mp4" > test.mp4
-- ffmpeg -i test.mp4 -vcodec copy test2.mkv
+- ffmpeg -v error -i test.mp4 -vcodec copy -f matroska - > /dev/null
 
 script:
+- ffpb -i test.mp3 -acodec copy test.mka
 - ffpb -i test.mp4 -vcodec copy test.mkv
 
 before_deploy:
