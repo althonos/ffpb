@@ -3,7 +3,7 @@
 
 **Not smart. Not comprehensive. Not guaranteed to work.**
 
-|Source| |PyPI| |Travis| |Format| |License|
+|Source| |PyPI| |Travis| |Format| |License| |Changelog|
 
 .. |PyPI| image:: https://img.shields.io/pypi/v/ffpb.svg?style=flat-square&maxAge=300
    :target: https://pypi.python.org/pypi/ffpb
@@ -22,6 +22,9 @@
 
 .. |Source| image:: https://img.shields.io/badge/source-GitHub-303030.svg?maxAge=3600&style=flat-square
    :target: https://github.com/althonos/ffpb/
+
+.. |Changelog| image:: https://img.shields.io/badge/keep%20a-changelog-8A0707.svg?maxAge=2678400&style=flat-square
+   :target: http://keepachangelog.com/
 
 ``ffpb`` is an FFmpeg progress formatter. It will attempt to display a nice
 progress bar in the output, based on the raw ``ffmpeg`` output, as well as an
