@@ -40,14 +40,8 @@ else:
     unicode = str
 
 import chardet
+import sh
 import tqdm
-
-if sys.platform == 'win32':
-    import pbs
-    ffmpeg = pbs.Command('ffmpeg')
-else:
-    import sh
-    ffmpeg = sh.ffmpeg
 
 
 class ProgressNotifier(object):
@@ -153,14 +147,14 @@ def main(argv=None, stream=sys.stderr):
     argv = argv or sys.argv[1:]
 
     if {"-h", "-help", "--help"}.intersection(argv):
-        ffmpeg(help=True, _fg=True)
+        sh.ffmpeg(help=True, _fg=True)
         return 0
 
     try:
 
         with ProgressNotifier(file=stream) as notifier:
 
-            ffmpeg(
+            sh.ffmpeg(
                 sys.argv[1:],
                 _in=queue.Queue(),
                 _err=notifier,
