@@ -155,7 +155,7 @@ def main(argv=None, stream=sys.stderr):
         with ProgressNotifier(file=stream) as notifier:
 
             sh.ffmpeg(
-                sys.argv[1:],
+                argv,
                 _in=queue.Queue(),
                 _err=notifier,
                 _out_bufsize=0,
