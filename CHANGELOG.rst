@@ -10,6 +10,9 @@ project adheres to `Semantic Versioning <http://semver.org/spec/v2.0.0.html>`_.
 Unreleased_
 -----------
 
+v0.2.0_ - 2019-04-29
+--------------------
+
 Added
 '''''
 - Python 3.7 as an explicitly supported version.
@@ -50,7 +53,8 @@ Initial release.
 
 
 
-.. _Unreleased: https://github.com/althonos/ffpb/compare/v0.1.3...HEAD
+.. _Unreleased: https://github.com/althonos/ffpb/compare/v0.2.0...HEAD
+.. _v0.2.0: https://github.com/althonos/ffpb/compare/v0.1.3...v0.2.0
 .. _v0.1.3: https://github.com/althonos/ffpb/compare/v0.1.2...v0.1.3
 .. _v0.1.2: https://github.com/althonos/ffpb/compare/v0.1.1...v0.1.2
 .. _v0.1.1: https://github.com/althonos/ffpb/compare/v0.1.0...v0.1.1
