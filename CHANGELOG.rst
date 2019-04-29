@@ -10,6 +10,10 @@ project adheres to `Semantic Versioning <http://semver.org/spec/v2.0.0.html>`_.
 Unreleased_
 -----------
 
+Added
+'''''
+- Python 3.7 as an explicitly supported version.
+
 Fixed
 '''''
 - Incorrect decoding of filenames cause by `chardet`.
