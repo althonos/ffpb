@@ -27,8 +27,9 @@
 from __future__ import unicode_literals
 from __future__ import print_function
 
-import re
+import locale
 import os
+import re
 import signal
 import sys
 
@@ -46,10 +47,10 @@ import tqdm
 
 class ProgressNotifier(object):
 
-    _DURATION_RX = re.compile("Duration: (\d{2}):(\d{2}):(\d{2})\.\d{2}")
-    _PROGRESS_RX = re.compile("time=(\d{2}):(\d{2}):(\d{2})\.\d{2}")
-    _SOURCE_RX = re.compile("from '(.*)':")
-    _FPS_RX = re.compile("(\d{2}\.\d{2}|\d{2}) fps")
+    _DURATION_RX = re.compile(b"Duration: (\d{2}):(\d{2}):(\d{2})\.\d{2}")
+    _PROGRESS_RX = re.compile(b"time=(\d{2}):(\d{2}):(\d{2})\.\d{2}")
+    _SOURCE_RX = re.compile(b"from '(.*)':")
+    _FPS_RX = re.compile(b"(\d{2}\.\d{2}|\d{2}) fps")
 
     @staticmethod
     def _seconds(hours, minutes, seconds):
@@ -62,23 +63,27 @@ class ProgressNotifier(object):
         if self.pbar is not None:
             self.pbar.close()
 
-    def __init__(self, file=None):
+    def __init__(self, file=None, encoding=None):
         self.lines = []
-        self.line_acc = []
+        self.line_acc = bytearray()
         self.duration = None
         self.source = None
         self.started = False
         self.pbar = None
         self.fps = None
         self.file = file or sys.stderr
+        self.encoding = encoding or locale.getpreferredencoding() or 'UTF-8'
 
     def __call__(self, char, stdin):
 
-        if not isinstance(char, unicode):
-            encoding = chardet.detect(char)["encoding"]
-            char = unicode(char, encoding)
+        # if not isinstance(char, unicode):
+        #     encoding = chardet.detect(char)["encoding"]
+        #     char = unicode(char, encoding)
 
-        if char in "\r\n":
+        if isinstance(char, unicode):
+            char = char.encode('ascii')
+
+        if char in b"\r\n":
             line = self.newline()
             if self.duration is None:
                 self.duration = self.get_duration(line)
@@ -88,22 +93,23 @@ class ProgressNotifier(object):
                 self.fps = self.get_fps(line)
             self.progress(line)
         else:
-            self.line_acc.append(char)
-            if self.line_acc[-6:] == list("[y/N] "):
-                print("".join(self.line_acc), end="")
+            self.line_acc.extend(char)
+            if self.line_acc[-6:] == bytearray(b"[y/N] "):
+                print(self.line_acc.decode(sys.stdin.encoding), end="")
                 stdin.put(input() + "\n")
                 self.newline()
 
     def newline(self):
-        line = "".join(self.line_acc)
+        line = bytes(self.line_acc)
         self.lines.append(line)
-        self.line_acc = []
+        self.line_acc = bytearray()
         return line
 
     def get_fps(self, line):
         search = self._FPS_RX.search(line)
         if search is not None:
             return round(float(search.group(1)))
+        return None
 
     def get_duration(self, line):
         search = self._DURATION_RX.search(line)
@@ -114,7 +120,7 @@ class ProgressNotifier(object):
     def get_source(self, line):
         search = self._SOURCE_RX.search(line)
         if search is not None:
-            return os.path.basename(search.group(1))
+            return os.path.basename(search.group(1).decode(self.encoding))
         return None
 
     def progress(self, line):
@@ -143,7 +149,7 @@ class ProgressNotifier(object):
             self.pbar.update(current - self.pbar.n)
 
 
-def main(argv=None, stream=sys.stderr):
+def main(argv=None, stream=sys.stderr, encoding=None):
     argv = argv or sys.argv[1:]
 
     if {"-h", "-help", "--help"}.intersection(argv):
@@ -152,7 +158,7 @@ def main(argv=None, stream=sys.stderr):
 
     try:
 
-        with ProgressNotifier(file=stream) as notifier:
+        with ProgressNotifier(file=stream, encoding=encoding) as notifier:
 
             sh.ffmpeg(
                 argv,
@@ -169,7 +175,7 @@ def main(argv=None, stream=sys.stderr):
             )
 
     except sh.ErrorReturnCode as err:
-        print(notifier.lines[-1], file=stream)
+        print(notifier.lines[-1].decode(sys.stdin.encoding), file=stream)
         return err.exit_code
 
     except KeyboardInterrupt:

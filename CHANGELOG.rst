@@ -10,6 +10,11 @@ project adheres to `Semantic Versioning <http://semver.org/spec/v2.0.0.html>`_.
 Unreleased_
 -----------
 
+Fixed
+'''''
+- Incorrect decoding of filenames cause by `chardet`.
+
+
 v0.1.3_ - 2019-04-06
 --------------------
 
