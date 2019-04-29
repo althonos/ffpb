@@ -40,7 +40,6 @@ else:
     import queue
     unicode = str
 
-import chardet
 import sh
 import tqdm
 
@@ -75,10 +74,6 @@ class ProgressNotifier(object):
         self.encoding = encoding or locale.getpreferredencoding() or 'UTF-8'
 
     def __call__(self, char, stdin):
-
-        # if not isinstance(char, unicode):
-        #     encoding = chardet.detect(char)["encoding"]
-        #     char = unicode(char, encoding)
 
         if isinstance(char, unicode):
             char = char.encode('ascii')
