@@ -66,3 +66,7 @@ Alternatively, download a development version from the GitHub ``master`` branch:
 .. code:: console
 
    $ pip install https://github.com/althonos/ffpb/archive/master.zip
+
+Or if you use an Arch-based distro, `download from the AUR`__
+
+.. __: https://aur.archlinux.org/packages/ffpb/
