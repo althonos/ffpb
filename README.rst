@@ -1,5 +1,8 @@
-``ffpb``
-========
+``ffpb`` |stars|
+================
+
+.. |stars| image:: https://img.shields.io/github/stars/althonos/ffpb.svg?style=social&maxAge=3600&label=Star
+   :target: https://github.com/althonos/ffpb/stargazers
 
 **Not smart. Not comprehensive. Not guaranteed to work.**
 
@@ -26,7 +29,7 @@
 .. |Changelog| image:: https://img.shields.io/badge/keep%20a-changelog-8A0707.svg?maxAge=2678400&style=flat-square
    :target: http://keepachangelog.com/
 
-.. |Downloads| image:: https://img.shields.io/pypi/dw/ffpb.svg?color=darkblue&style=flat-square&maxAge=3600
+.. |Downloads| image:: https://img.shields.io/badge/dynamic/json?style=flat-square&color=303f9f&maxAge=86400&label=downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi.pepy.tech%2Fapi%2Fprojects%2Fffpb
    :target: https://pepy.tech/project/ffpb
 
 ``ffpb`` is an FFmpeg progress formatter. It will attempt to display a nice
