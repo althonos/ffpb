@@ -10,6 +10,19 @@ project adheres to `Semantic Versioning <http://semver.org/spec/v2.0.0.html>`_.
 Unreleased_
 -----------
 
+v0.3.0_ - 2020-08-15
+--------------------
+
+Added
+'''''
+- Option to change progress bar class in ``ffpb.main``.
+
+Fixed
+'''''
+- Decoding error caused by missing encoding in ``ffpb.main``.
+  (`#17 <https://github.com/althonos/ffpb/issues/17>`_).
+
+
 v0.2.0_ - 2019-04-29
 --------------------
 
@@ -19,7 +32,7 @@ Added
 
 Fixed
 '''''
-- Incorrect decoding of filenames cause by `chardet`.
+- Incorrect decoding of filenames caused by ``chardet``.
 
 
 v0.1.3_ - 2019-04-06
@@ -53,7 +66,8 @@ Initial release.
 
 
 
-.. _Unreleased: https://github.com/althonos/ffpb/compare/v0.2.0...HEAD
+.. _Unreleased: https://github.com/althonos/ffpb/compare/v0.3.0...HEAD
+.. _v0.3.0: https://github.com/althonos/ffpb/compare/v0.2.0...v0.3.0
 .. _v0.2.0: https://github.com/althonos/ffpb/compare/v0.1.3...v0.2.0
 .. _v0.1.3: https://github.com/althonos/ffpb/compare/v0.1.2...v0.1.3
 .. _v0.1.2: https://github.com/althonos/ffpb/compare/v0.1.1...v0.1.2
