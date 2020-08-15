@@ -41,7 +41,7 @@ else:
     unicode = str
 
 import sh
-import tqdm
+from tqdm import tqdm
 
 
 class ProgressNotifier(object):
@@ -62,7 +62,7 @@ class ProgressNotifier(object):
         if self.pbar is not None:
             self.pbar.close()
 
-    def __init__(self, file=None, encoding=None):
+    def __init__(self, file=None, encoding=None, tqdm=tqdm):
         self.lines = []
         self.line_acc = bytearray()
         self.duration = None
@@ -72,6 +72,7 @@ class ProgressNotifier(object):
         self.fps = None
         self.file = file or sys.stderr
         self.encoding = encoding or locale.getpreferredencoding() or 'UTF-8'
+        self.tqdm = tqdm
 
     def __call__(self, char, stdin):
 
@@ -132,7 +133,7 @@ class ProgressNotifier(object):
                 total *= self.fps
 
             if self.pbar is None:
-                self.pbar = tqdm.tqdm(
+                self.pbar = self.tqdm(
                     desc=self.source,
                     file=self.file,
                     total=total,
@@ -144,7 +145,7 @@ class ProgressNotifier(object):
             self.pbar.update(current - self.pbar.n)
 
 
-def main(argv=None, stream=sys.stderr, encoding=None):
+def main(argv=None, stream=sys.stderr, encoding=None, tqdm=tqdm):
     argv = argv or sys.argv[1:]
 
     if {"-h", "-help", "--help"}.intersection(argv):
@@ -153,7 +154,7 @@ def main(argv=None, stream=sys.stderr, encoding=None):
 
     try:
 
-        with ProgressNotifier(file=stream, encoding=encoding) as notifier:
+        with ProgressNotifier(file=stream, encoding=encoding, tqdm=tqdm) as notifier:
 
             sh.ffmpeg(
                 argv,

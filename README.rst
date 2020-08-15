@@ -53,6 +53,27 @@ is transparently given to the `ffmpeg` binary on your system, without any form
 of validation. So if you know how to use the FFmpeg CLI, you know how to use
 ``ffpb`` !
 
+Using as a library
+^^^^^^^^^^^^^^^^^^
+
+`ffpb` can be used as a library: use the ``ffpb.main`` function:
+
+.. code:: python
+
+    ffpb.main(argv=None, stream=sys.stderr, encoding=None, tqdm=tqdm):
+
+
+argv
+    The arguments to pass to ``ffmpeg``, as an argument list.
+stream
+    The stream to which to write the progress bar and the output messages.
+encoding
+    The encoding of the terminal, used to decode the ``ffmpeg`` output.
+    Defaults to ``locale.getpreferredencoding()``, or *UTF-8* is locales are
+    not available.
+tqdm
+    The progress bar factory to use. A subclass of
+    `tqdm.tqdm <https://tqdm.github.io/docs/tqdm/#tqdm-objects>`_ is expected.
 
 Installation
 ------------
