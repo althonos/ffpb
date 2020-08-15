@@ -91,7 +91,7 @@ class ProgressNotifier(object):
         else:
             self.line_acc.extend(char)
             if self.line_acc[-6:] == bytearray(b"[y/N] "):
-                print(self.line_acc.decode(sys.stdin.encoding), end="")
+                print(self.line_acc.decode(self.encoding), end="")
                 stdin.put(input() + "\n")
                 self.newline()
 
@@ -171,7 +171,7 @@ def main(argv=None, stream=sys.stderr, encoding=None, tqdm=tqdm):
             )
 
     except sh.ErrorReturnCode as err:
-        print(notifier.lines[-1].decode(sys.stdin.encoding), file=stream)
+        print(notifier.lines[-1].decode(notifier.encoding), file=stream)
         return err.exit_code
 
     except KeyboardInterrupt:
