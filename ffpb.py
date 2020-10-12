@@ -40,9 +40,16 @@ else:
     import queue
     unicode = str
 
-import sh
-from tqdm import tqdm
+if os.name == "nt":
+    import subprocess
+    from functools import partial
+    from tqdm import tqdm as std_tqdm
+    tqdm = partial(std_tqdm, dynamic_ncols=True, ascii=True)
+else:
+    import sh
+    from tqdm import tqdm
 
+    
 
 class ProgressNotifier(object):
 
@@ -74,7 +81,7 @@ class ProgressNotifier(object):
         self.encoding = encoding or locale.getpreferredencoding() or 'UTF-8'
         self.tqdm = tqdm
 
-    def __call__(self, char, stdin):
+    def __call__(self, char, stdin = None):
 
         if isinstance(char, unicode):
             char = char.encode('ascii')
@@ -92,7 +99,8 @@ class ProgressNotifier(object):
             self.line_acc.extend(char)
             if self.line_acc[-6:] == bytearray(b"[y/N] "):
                 print(self.line_acc.decode(self.encoding), end="")
-                stdin.put(input() + "\n")
+                if stdin:
+                    stdin.put(input() + "\n")
                 self.newline()
 
     def newline(self):
@@ -144,31 +152,44 @@ class ProgressNotifier(object):
 
             self.pbar.update(current - self.pbar.n)
 
+def run_on_window(args, notifier):
+    cmd = "ffmpeg " + " ".join(args)
+    
+    p = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE)
+
+    while True:
+        out = p.stderr.read(1).decode("utf-8")
+        if out == '' and p.poll() != None:
+            break
+        if out != '':
+            notifier(out)
 
 def main(argv=None, stream=sys.stderr, encoding=None, tqdm=tqdm):
     argv = argv or sys.argv[1:]
 
-    if {"-h", "-help", "--help"}.intersection(argv):
-        sh.ffmpeg(help=True, _fg=True)
-        return 0
+    if not os.name == "nt":
+        if {"-h", "-help", "--help"}.intersection(argv):
+            sh.ffmpeg(help=True, _fg=True)
+            return 0
 
     try:
-
         with ProgressNotifier(file=stream, encoding=encoding, tqdm=tqdm) as notifier:
-
-            sh.ffmpeg(
-                argv,
-                _in=queue.Queue(),
-                _err=notifier,
-                _out_bufsize=0,
-                _err_bufsize=0,
-                # _in_bufsize=0,
-                _no_out=True,
-                _no_pipe=True,
-                _tty_in=True,
-                # _fg=True,
-                # _bg=True,
-            )
+            if os.name == "nt":
+                run_on_window(argv, notifier)
+            else:
+                sh.ffmpeg(
+                    argv,
+                    _in=queue.Queue(),
+                    _err=notifier,
+                    _out_bufsize=0,
+                    _err_bufsize=0,
+                    # _in_bufsize=0,
+                    _no_out=True,
+                    _no_pipe=True,
+                    _tty_in=True,
+                    # _fg=True,
+                    # _bg=True,
+                )
 
     except sh.ErrorReturnCode as err:
         print(notifier.lines[-1].decode(notifier.encoding), file=stream)
