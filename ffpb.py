@@ -138,7 +138,8 @@ class ProgressNotifier(object):
             if self.fps is not None:
                 unit = " frames"
                 current *= self.fps
-                total *= self.fps
+                if total:
+                    total *= self.fps
 
             if self.pbar is None:
                 self.pbar = self.tqdm(
