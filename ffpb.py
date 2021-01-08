@@ -32,6 +32,7 @@ import os
 import re
 import signal
 import sys
+import subprocess
 
 if sys.version_info < (3, 0):
     import Queue as queue
@@ -40,17 +41,14 @@ else:
     import queue
     unicode = str
 
+from functools import partial
+from tqdm import tqdm as std_tqdm
 if os.name == "nt":
-    import subprocess
-    from functools import partial
-    from tqdm import tqdm as std_tqdm
-    tqdm = partial(std_tqdm, dynamic_ncols=True, ascii=True)
+    tqdm = partial(std_tqdm, dynamic_ncols=True, ascii=True) # windows cmd has problems with unicode
 else:
-    import sh
-    from tqdm import tqdm
+    tqdm = partial(std_tqdm, dynamic_ncols=True)
 
     
-
 class ProgressNotifier(object):
 
     _DURATION_RX = re.compile(b"Duration: (\d{2}):(\d{2}):(\d{2})\.\d{2}")
@@ -153,48 +151,21 @@ class ProgressNotifier(object):
 
             self.pbar.update(current - self.pbar.n)
 
-def run_on_window(args, notifier):
-    cmd = "ffmpeg " + " ".join(args)
-    
-    p = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE)
-
-    while True:
-        out = p.stderr.read(1).decode("utf-8")
-        if out == '' and p.poll() != None:
-            break
-        if out != '':
-            notifier(out)
-
 def main(argv=None, stream=sys.stderr, encoding=None, tqdm=tqdm):
     argv = argv or sys.argv[1:]
 
-    if not os.name == "nt":
-        if {"-h", "-help", "--help"}.intersection(argv):
-            sh.ffmpeg(help=True, _fg=True)
-            return 0
-
     try:
         with ProgressNotifier(file=stream, encoding=encoding, tqdm=tqdm) as notifier:
-            if os.name == "nt":
-                run_on_window(argv, notifier)
-            else:
-                sh.ffmpeg(
-                    argv,
-                    _in=queue.Queue(),
-                    _err=notifier,
-                    _out_bufsize=0,
-                    _err_bufsize=0,
-                    # _in_bufsize=0,
-                    _no_out=True,
-                    _no_pipe=True,
-                    _tty_in=True,
-                    # _fg=True,
-                    # _bg=True,
-                )
 
-    except sh.ErrorReturnCode as err:
-        print(notifier.lines[-1].decode(notifier.encoding), file=stream)
-        return err.exit_code
+            cmd = "ffmpeg " + " ".join(argv)
+            p = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE)
+
+            while True:
+                out = p.stderr.read(1).decode("utf-8")
+                if out == '' and p.poll() != None:
+                    break
+                if out != '':
+                    notifier(out)
 
     except KeyboardInterrupt:
         print("Exiting.", file=stream)
