@@ -168,8 +168,14 @@ def main(argv=None, stream=sys.stderr, encoding=None, tqdm=tqdm):
         print("Exiting.", file=stream)
         return signal.SIGINT + 128  # POSIX standard
 
+    except Exception as err:
+        print("Unexpected exception:", err, file=stream)
+        return 1
+
     else:
-        return 0
+        if p.returncode != 0:
+            print(notifier.lines[-1].decode(notifier.encoding), file=stream)
+        return p.returncode
 
 
 if __name__ == "__main__":
