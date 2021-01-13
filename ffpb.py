@@ -32,6 +32,7 @@ import os
 import re
 import signal
 import sys
+import subprocess
 
 if sys.version_info < (3, 0):
     import Queue as queue
@@ -40,10 +41,14 @@ else:
     import queue
     unicode = str
 
-import sh
-from tqdm import tqdm
+from functools import partial
+from tqdm import tqdm as std_tqdm
+if os.name == "nt":
+    tqdm = partial(std_tqdm, dynamic_ncols=True, ascii=True) # windows cmd has problems with unicode
+else:
+    tqdm = partial(std_tqdm, dynamic_ncols=True)
 
-
+    
 class ProgressNotifier(object):
 
     _DURATION_RX = re.compile(b"Duration: (\d{2}):(\d{2}):(\d{2})\.\d{2}")
@@ -74,7 +79,7 @@ class ProgressNotifier(object):
         self.encoding = encoding or locale.getpreferredencoding() or 'UTF-8'
         self.tqdm = tqdm
 
-    def __call__(self, char, stdin):
+    def __call__(self, char, stdin = None):
 
         if isinstance(char, unicode):
             char = char.encode('ascii')
@@ -92,7 +97,8 @@ class ProgressNotifier(object):
             self.line_acc.extend(char)
             if self.line_acc[-6:] == bytearray(b"[y/N] "):
                 print(self.line_acc.decode(self.encoding), end="")
-                stdin.put(input() + "\n")
+                if stdin:
+                    stdin.put(input() + "\n")
                 self.newline()
 
     def newline(self):
@@ -130,7 +136,8 @@ class ProgressNotifier(object):
             if self.fps is not None:
                 unit = " frames"
                 current *= self.fps
-                total *= self.fps
+                if total:
+                    total *= self.fps
 
             if self.pbar is None:
                 self.pbar = self.tqdm(
@@ -144,35 +151,21 @@ class ProgressNotifier(object):
 
             self.pbar.update(current - self.pbar.n)
 
-
 def main(argv=None, stream=sys.stderr, encoding=None, tqdm=tqdm):
     argv = argv or sys.argv[1:]
 
-    if {"-h", "-help", "--help"}.intersection(argv):
-        sh.ffmpeg(help=True, _fg=True)
-        return 0
-
     try:
-
         with ProgressNotifier(file=stream, encoding=encoding, tqdm=tqdm) as notifier:
 
-            sh.ffmpeg(
-                argv,
-                _in=queue.Queue(),
-                _err=notifier,
-                _out_bufsize=0,
-                _err_bufsize=0,
-                # _in_bufsize=0,
-                _no_out=True,
-                _no_pipe=True,
-                _tty_in=True,
-                # _fg=True,
-                # _bg=True,
-            )
+            cmd = "ffmpeg " + " ".join(argv)
+            p = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE)
 
-    except sh.ErrorReturnCode as err:
-        print(notifier.lines[-1].decode(notifier.encoding), file=stream)
-        return err.exit_code
+            while True:
+                out = p.stderr.read(1).decode("utf-8")
+                if out == '' and p.poll() != None:
+                    break
+                if out != '':
+                    notifier(out)
 
     except KeyboardInterrupt:
         print("Exiting.", file=stream)
