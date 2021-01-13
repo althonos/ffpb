@@ -10,6 +10,16 @@ this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 [Unreleased]: https://github.com/althonos/ffpb/compare/v0.4.0...HEAD
 
 
+## [v0.4.0] - 2021-01-13
+[v0.4.0]: https://github.com/althonos/ffpb/compare/v0.3.0...v0.4.0
+
+### Added
+-   Support for Windows platform ([#21](https://github.com/althonos/ffpb/pull/21)).
+
+### Removed
+- [sh](https://pypi.org/project/sh) dependency.
+
+
 ## [v0.3.0] - 2020-08-15
 [v0.3.0]: https://github.com/althonos/ffpb/compare/v0.2.0...v0.3.0
 
