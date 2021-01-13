@@ -1,0 +1,43 @@
+version: '{build}'
+image: "Visual Studio 2019"
+clone_depth: 5
+environment:
+  matrix:
+  - PYTHON: "C:\\Python27-x64"
+    PYTHON_VERSION: "2.7"
+    PYTHON_ARCH: "64"
+  - PYTHON: "C:\\Python36-x64"
+    PYTHON_VERSION: "3.6"
+    PYTHON_ARCH: "64"
+  - PYTHON: "C:\\Python37-x64"
+    PYTHON_VERSION: "3.7"
+    PYTHON_ARCH: "64"
+  - PYTHON: "C:\\Python38-x64"
+    PYTHON_VERSION: "3.8"
+    PYTHON_ARCH: "64"
+  - PYTHON: "C:\\Python39-x64"
+    PYTHON_VERSION: "3.9"
+    PYTHON_ARCH: "64"
+
+cache:
+  - build -> appveyor.yml
+
+install:
+- choco install ffmpeg
+- "%PYTHON%\\python.exe -m pip install -U pip wheel setuptools"
+
+build_script:
+- "%PYTHON%\\python.exe -m pip install ."
+
+before_test:
+- ffmpeg -version
+- curl -SsL "http://techslides.com/demos/sample-videos/small.mp4" > test.mp4
+
+test_script:
+- "%PYTHON%\\python.exe -m ffpb -i static/test.mp3 -acodec copy test.mka"
+- "%PYTHON%\\python.exe -m ffpb -i test.mp4 -vcodec copy test.mkv"
+
+before_deploy:
+- "%PYTHON%\\python.exe -m pip install -U twine"
+- "%PYTHON%\\python.exe setup.py sdist bdist_wheel"
+- "%PYTHON%\\python.exe -m twine check dist\\*"
