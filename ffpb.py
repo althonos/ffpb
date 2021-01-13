@@ -154,8 +154,8 @@ def main(argv=None, stream=sys.stderr, encoding=None, tqdm=tqdm):
     try:
         with ProgressNotifier(file=stream, encoding=encoding, tqdm=tqdm) as notifier:
 
-            cmd = "ffmpeg " + " ".join(argv)
-            p = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE)
+            cmd = ["ffmpeg"] + argv
+            p = subprocess.Popen(cmd, stderr=subprocess.PIPE)
 
             while True:
                 out = p.stderr.read(1).decode("utf-8")
