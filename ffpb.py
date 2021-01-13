@@ -91,7 +91,8 @@ class ProgressNotifier(object):
         else:
             self.line_acc.extend(char)
             if self.line_acc[-6:] == bytearray(b"[y/N] "):
-                print(self.line_acc.decode(self.encoding), end="")
+                print(self.line_acc.decode(self.encoding), end="", file=self.file)
+                self.file.flush()
                 if stdin:
                     stdin.put(input() + "\n")
                 self.newline()
