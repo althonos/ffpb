@@ -41,3 +41,6 @@ before_deploy:
 - "%PYTHON%\\python.exe -m pip install -U twine"
 - "%PYTHON%\\python.exe setup.py sdist bdist_wheel"
 - "%PYTHON%\\python.exe -m twine check dist\\*"
+
+deploy_script:
+- ps: .\ci\appveyor\deploy.ps1
