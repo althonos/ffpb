@@ -7,7 +7,14 @@ this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
 
 ## [Unreleased]
-[Unreleased]: https://github.com/althonos/ffpb/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/althonos/ffpb/compare/v0.4.1...HEAD
+
+
+## [v0.4.1] - 2021-02-13
+[v0.4.1]: https://github.com/althonos/ffpb/compare/v0.4.0...v0.4.1
+
+### Fixed
+- Unneeded decoding in main loop causing codec issues ([#22](https://github.com/althonos/ffpb/issues/22)).
 
 
 ## [v0.4.0] - 2021-01-13
