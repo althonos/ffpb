@@ -6,13 +6,13 @@
 
 **Not smart. Not comprehensive. Not guaranteed to work.**
 
-|Source| |PyPI| |Travis| |Format| |License| |Changelog| |Downloads|
+|Source| |PyPI| |AppVeyor| |Format| |License| |Changelog| |Downloads|
 
 .. |PyPI| image:: https://img.shields.io/pypi/v/ffpb.svg?style=flat-square&maxAge=300
    :target: https://pypi.python.org/pypi/ffpb
 
-.. |Travis| image:: https://img.shields.io/travis/althonos/ffpb.svg?style=flat-square&maxAge=3600
-   :target: https://travis-ci.org/althonos/ffpb/branches
+.. |AppVeyor| image:: https://img.shields.io/appveyor/build/althonos/ffpb.svg?style=flat-square&maxAge=3600
+   :target: https://ci.appveyor.com/project/althonos/ffpb
 
 .. |Format| image:: https://img.shields.io/pypi/format/ffpb.svg?style=flat-square&maxAge=300
    :target: https://pypi.python.org/pypi/ffpb
@@ -74,6 +74,8 @@ encoding
 tqdm
     The progress bar factory to use. A subclass of
     `tqdm.tqdm <https://tqdm.github.io/docs/tqdm/#tqdm-objects>`_ is expected.
+    Check `althonos/ffpb#19 <https://github.com/althonos/ffpb/issues/19>`_ to
+    see how you can use this to wrap ``ffpb`` in your own UI.
 
 Installation
 ------------
