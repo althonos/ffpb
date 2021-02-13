@@ -75,10 +75,8 @@ class ProgressNotifier(object):
         self.tqdm = tqdm
 
     def __call__(self, char, stdin = None):
-
         if isinstance(char, unicode):
             char = char.encode('ascii')
-
         if char in b"\r\n":
             line = self.newline()
             if self.duration is None:
@@ -158,10 +156,10 @@ def main(argv=None, stream=sys.stderr, encoding=None, tqdm=tqdm):
             p = subprocess.Popen(cmd, stderr=subprocess.PIPE)
 
             while True:
-                out = p.stderr.read(1).decode("utf-8")
-                if out == '' and p.poll() != None:
+                out = p.stderr.read(1)
+                if out == b"" and p.poll() != None:
                     break
-                if out != '':
+                if out != b"":
                     notifier(out)
 
     except KeyboardInterrupt:
