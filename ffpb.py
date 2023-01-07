@@ -54,25 +54,23 @@ __version__	= "0.4.2"
 
 #-=-=-=-#
 
-def Detect_Binary(Name: str.lower, Variable_Name: str = "PATH", Format: str = "EXE") -> str:
-	"""Looks for binary of `Name` in the `Variable` environment variable."""
-	Name_Original = Name
-	Name = Name.lower()
-	Format = Format.lower()
-	#-=-=-=-#
-	if os.name == "nt":
-		for Variable in os.environ[Variable_Name].split(os.pathsep):
-			if Name + "." + Format in Variable:
+FFmpeg = "FFmpeg"
+
+if os.name == "nt":
+	for Variable in os.environ["PATH"].split(os.pathsep):
+		if os.path.exists(Variable):
+			if os.path.isfile(Variable):
 				Name = str(Path(Variable).resolve())
-				if os.path.exists(Name):
+				if Name.lower() in Variable:
+					FFmpeg = Name
 					break
-			else:
-				raise AttributeError(Name_Original + " not found!")
-	#-=-=-=-#
-	return Name
-
-FFmpeg = Detect_Binary("FFmpeg")
-
+		try:
+			raise AttributeError(Name_Original + " not found!")
+		except Exception as Error:
+			raise SystemExit(Error.__class__.__name__ + ": " + Error)
+else:
+	FFmpeg = FFmpeg.lower()
+				
 #-=-=-=-#
 
 class ProgressNotifier(object):
@@ -171,7 +169,7 @@ class ProgressNotifier(object):
 					dynamic_ncols = 1,
 					unit = unit,
 					ncols = 0,
-					ascii = os.name == "nt" # Windows CMD has problems with Unicode
+					ascii = os.name == "nt"	# Windows CMD has problems with Unicode
 				)
 
 			self.pbar.update(current - self.pbar.n)
@@ -194,7 +192,7 @@ def main(argv = None, stream = sys.stderr, encoding = None, tqdm = tqdm):
 
 	except KeyboardInterrupt:
 		print("Exiting.", file = stream)
-		return signal.SIGINT + 128 # POSIX standard
+		return signal.SIGINT + 128	# POSIX standard
 
 	except Exception as err:
 		print("Unexpected exception:", err, file = stream)
