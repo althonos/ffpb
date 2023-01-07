@@ -60,7 +60,7 @@ Using as a library
 
 .. code:: python
 
-    ffpb.main(argv=None, stream=sys.stderr, encoding=None, tqdm=tqdm):
+    ffpb.main(argv = None, stream = sys.stderr, encoding = None, tqdm= tqdm):
 
 
 argv
