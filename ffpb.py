@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# Copyright (c) 2017-2021 Martin Larralde <martin.larralde@ens-paris-saclay.fr>
+# Copyright (c) 2017-2022 Martin Larralde <martin.larralde@ens-paris-saclay.fr>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
