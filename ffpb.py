@@ -61,15 +61,12 @@ if os.name == "nt":
 		if os.path.exists(Variable):
 			if os.path.isfile(Variable):
 				Name = str(Path(Variable).resolve())
-				if Name.lower() in Variable.lower():
+				if Name.lower() in Variable.lower():	
 					FFmpeg = Name
 					break
-		try:
-			raise AttributeError(FFmpeg + " not found!")
-		except Exception as Error:
-			raise SystemExit(Error.__class__.__name__ + ": " + str(Error))
 else:
 	FFmpeg = FFmpeg.lower()
+
 				
 #-=-=-=-#
 
