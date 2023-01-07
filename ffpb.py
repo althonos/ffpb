@@ -58,10 +58,10 @@ FFmpeg = "FFmpeg"
 
 if os.name == "nt":
 	for Variable in os.environ["PATH"].split(os.pathsep):
-		if os.path.exists(Variable):
-			if os.path.isfile(Variable):
-				Name = str(Path(Variable).resolve())
-				if Name.lower() in Variable.lower():	
+		if Name.lower() in Variable.lower():
+			if os.path.exists(Variable):
+				if os.path.isfile(Variable):
+					Name = str(Path(Variable).resolve())
 					FFmpeg = Name
 					break
 else:
