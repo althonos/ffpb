@@ -54,18 +54,18 @@ __version__	= "0.4.2"
 
 #-=-=-=-#
 
-FFmpeg = "FFmpeg"
+__FFmpeg = "FFmpeg"
 
 if os.name == "nt":
-	for Variable in os.environ["PATH"].split(os.pathsep):
-		Name = str(Path(Variable).resolve())
-		if Name.lower() in Variable.lower():
-			if os.path.exists(Variable):
-				if os.path.isfile(Variable):
-					FFmpeg = Name
+	for __Variable in os.environ["PATH"].split(os.pathsep):
+		__Name = str(Path(__Variable).resolve())
+		if __Name.lower() in __Variable.lower():
+			if os.path.exists(__Variable):
+				if os.path.isfile(__Variable):
+					__FFmpeg = __Name
 					break
 else:
-	FFmpeg = FFmpeg.lower()
+	__FFmpeg = __FFmpeg.lower()
 
 				
 #-=-=-=-#
@@ -177,7 +177,7 @@ def main(argv = None, stream = sys.stderr, encoding = None, tqdm = tqdm):
 	argv = argv or sys.argv[1:]
 	try:
 		with ProgressNotifier(file = stream, encoding = encoding, tqdm = tqdm) as notifier:
-			cmd = [FFmpeg] + argv
+			cmd = [__FFmpeg] + argv
 			p = subprocess.Popen(cmd, stderr = subprocess.PIPE)
 
 			while 1:
