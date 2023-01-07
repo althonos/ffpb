@@ -60,13 +60,14 @@ def Detect_Binary(Name: str.lower, Variable_Name: str = "PATH", Format: str = "E
 	Name = Name.lower()
 	Format = Format.lower()
 	#-=-=-=-#
-	if os.sys.platform.lower().startswith("win"):
+	if os.name == "nt":
 		for Variable in os.environ[Variable_Name].split(os.pathsep):
 			if Name + "." + Format in Variable:
-				# Fix the final path
 				Name = str(Path(Variable).resolve())
-				if not os.path.exists(Name):
-					raise AttributeError(Name_Original + " not found!")
+				if os.path.exists(Name):
+					break
+			else:
+				raise AttributeError(Name_Original + " not found!")
 	#-=-=-=-#
 	return Name
 
@@ -88,7 +89,7 @@ class ProgressNotifier(object):
 		return self
 
 	def __exit__(self, exc_type, exc_value, traceback):
-		if self.pbar is not None:
+		if self.pbar != None:
 			self.pbar.close()
 
 	def __init__(self, file = None, encoding = None, tqdm = tqdm):
@@ -105,14 +106,14 @@ class ProgressNotifier(object):
 
 	def __call__(self, char, stdin = None):
 		if isinstance(char, unicode):
-			char = char.encode('ascii')
+			char = char.encode("ascii")
 		if char in b"\r\n":
 			line = self.newline()
-			if self.duration is None:
+			if self.duration == None:
 				self.duration = self.get_duration(line)
-			if self.source is None:
+			if self.source == None:
 				self.source = self.get_source(line)
-			if self.fps is None:
+			if self.fps == None:
 				self.fps = self.get_fps(line)
 			self.progress(line)
 		else:
@@ -132,37 +133,37 @@ class ProgressNotifier(object):
 
 	def get_fps(self, line):
 		search = self._FPS_RX.search(line)
-		if search is not None:
+		if search != None:
 			return round(float(search.group(1)))
 		return None
 
 	def get_duration(self, line):
 		search = self._DURATION_RX.search(line)
-		if search is not None:
+		if search != None:
 			return self._seconds(*search.groups())
 		return None
 
 	def get_source(self, line):
 		search = self._SOURCE_RX.search(line)
-		if search is not None:
+		if search != None:
 			return os.path.basename(search.group(1).decode(self.encoding))
 		return None
 
 	def progress(self, line):
 		search = self._PROGRESS_RX.search(line)
-		if search is not None:
+		if search != None:
 
 			total = self.duration
 			current = self._seconds(*search.groups())
 			unit = " seconds"
 
-			if self.fps is not None:
+			if self.fps != None:
 				unit = " frames"
 				current *= self.fps
 				if total:
 					total *= self.fps
 
-			if self.pbar is None:
+			if self.pbar == None:
 				self.pbar = self.tqdm(
 					desc = self.source,
 					file = self.file,
